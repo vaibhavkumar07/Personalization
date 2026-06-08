@@ -2,12 +2,16 @@ import { FACE_MATCH_THRESHOLD } from './config.js';
 
 let _modelsLoaded = false;
 
+const _modelBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? '/models'
+  : `${window.location.pathname.replace(/\/[^/]*$/, '')}/models`;
+
 export async function loadModels() {
   if (_modelsLoaded) return;
   await Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+    faceapi.nets.tinyFaceDetector.loadFromUri(_modelBase),
+    faceapi.nets.faceLandmark68Net.loadFromUri(_modelBase),
+    faceapi.nets.faceRecognitionNet.loadFromUri(_modelBase),
   ]);
   _modelsLoaded = true;
 }
