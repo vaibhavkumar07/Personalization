@@ -1,14 +1,14 @@
 import { loadModels } from './face-engine.js';
+import { initPortal } from './portal.js';
 
-// revealPath wired in Task 11
 export function revealPath(path) {
-  console.log('Reveal path:', path);
+  console.log('Reveal path:', path); // replaced in Task 11
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     await loadModels();
-    // initPortal() wired in Task 5
+    initPortal();
   } catch (err) {
     console.error('Failed to load face models:', err);
     const status = document.getElementById('portal-status');
