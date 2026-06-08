@@ -21,13 +21,15 @@ export function initPortal() {
 }
 
 function checkSetupMode() {
-  if (window.location.search.includes('setup')) {
-    const pw = prompt('Admin password:');
-    if (pw === ADMIN_PASSWORD) {
-      import('./admin.js').then(m => m.initAdmin(_users));
-    } else {
-      document.body.innerHTML = '';
-    }
+  if (!window.location.search.includes('setup')) return;
+  const pw = prompt('Admin password:');
+  if (pw === ADMIN_PASSWORD) {
+    import('./admin.js').then(m => m.initAdmin(_users));
+  } else if (pw !== null) {
+    // Wrong password — show error on portal, continue normally
+    setStatus('Access denied', 'error');
+    // Clean up the ?setup param so it doesn't re-prompt on refresh
+    history.replaceState(null, '', window.location.pathname);
   }
 }
 
@@ -149,7 +151,15 @@ function spawnDeniedParticles() {
   }
 }
 
+export function stopDetectionLoop() {
+  if (_detectionLoopId) {
+    cancelAnimationFrame(_detectionLoopId);
+    _detectionLoopId = null;
+  }
+}
+
 function resetPortal() {
+  stopDetectionLoop();
   _capturedDescriptor = null;
   clearStableTimer();
   const nameWrap = document.getElementById('name-wrap');
@@ -178,7 +188,6 @@ function spawnParticles() {
       left: ${Math.random() * 100}%;
       animation-duration: ${8 + Math.random() * 12}s;
       animation-delay: ${-Math.random() * 20}s;
-      opacity: ${0.2 + Math.random() * 0.5};
     `;
     container.appendChild(p);
   }

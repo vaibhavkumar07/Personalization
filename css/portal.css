@@ -1,11 +1,20 @@
 /* ── Background ── */
 #screen-portal {
-  background: radial-gradient(ellipse at 30% 40%, #0d1a3a 0%, #050810 60%);
+  background: #050810;
+  overflow: hidden;
+}
+#screen-portal::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(ellipse at 50% 50%, #0d1a3a 0%, transparent 60%);
   animation: bg-shift 12s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
 }
 @keyframes bg-shift {
-  0%   { background-position: 30% 40%; }
-  100% { background-position: 70% 60%; }
+  0%   { transform: translate(-20%, -20%); }
+  100% { transform: translate(20%, 20%); }
 }
 
 /* ── Particles ── */
