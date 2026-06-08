@@ -95,7 +95,6 @@ function buildScreens() {
   noteEl.style.cssText = 'margin-top:16px;font-size:0.8rem;color:rgba(255,150,180,0.6)';
   noteEl.textContent = 'Par dil ki doori? Zero. 💕';
   s2.append(numEl, labelEl, globeWrap, subEl, noteEl);
-  animateCounter('dist-counter', distKm, 2000);
 
   // Screen 3 — Reason Card (rendered dynamically)
   renderReasonCard(0);
@@ -179,6 +178,10 @@ function showLoveScreen(index) {
     if (isActive) s.classList.remove('hidden');
     else s.classList.add('hidden');
   });
+  if (index === 2) {
+    const distKm = calcDistanceKm(COORDS.vaibhav, COORDS.pragya);
+    animateCounter('dist-counter', distKm, 2000);
+  }
 }
 
 function spawnPetals() {
