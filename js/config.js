@@ -36,7 +36,9 @@ export function loadUsers() {
     return DEFAULT_USERS.map(u => {
       const s = saved.find(x => x.id === u.id);
       if (s?.descriptor) {
-        return { ...u, descriptor: new Float32Array(Object.values(s.descriptor)) };
+        return { ...u, descriptor: new Float32Array(
+          Array.isArray(s.descriptor) ? s.descriptor : Object.values(s.descriptor)
+        ) };
       }
       return { ...u };
     });

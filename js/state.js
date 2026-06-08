@@ -17,6 +17,10 @@ const _listeners = [];
 export function getState() { return _state; }
 
 export function setState(next) {
+  if (next === _state) return;
+  if (!Object.values(S).includes(next)) {
+    throw new Error(`setState: unknown state "${next}"`);
+  }
   const prev = _state;
   _state = next;
   _listeners.forEach(fn => fn(next, prev));
