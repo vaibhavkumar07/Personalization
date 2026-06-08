@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Portal</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/love.css">
+  <link rel="stylesheet" href="css/bestie.css">
+  <link rel="stylesheet" href="css/self.css">
+</head>
+<body>
+
+  <!-- PORTAL -->
+  <div id="screen-portal" class="screen active">
+    <div id="portal-particles"></div>
+    <div class="glass-card">
+      <div id="camera-ring">
+        <video id="portal-video" autoplay muted playsinline></video>
+        <canvas id="portal-canvas"></canvas>
+        <div id="scan-line"></div>
+        <div id="corner-tl" class="corner"></div>
+        <div id="corner-tr" class="corner"></div>
+        <div id="corner-bl" class="corner"></div>
+        <div id="corner-br" class="corner"></div>
+      </div>
+      <div id="portal-status">Initializing...</div>
+      <div id="name-wrap" class="hidden">
+        <input id="name-input" type="text" placeholder="Enter your name..." autocomplete="off" autocorrect="off" spellcheck="false">
+        <button id="name-btn" aria-label="Submit">→</button>
+      </div>
+      <div id="portal-hint">Look into the portal</div>
+    </div>
+  </div>
+
+  <!-- NOT FOUND -->
+  <div id="screen-notfound" class="screen hidden">
+    <div class="glitch-wrap">
+      <div class="glitch-text" data-text="Identity Unknown">Identity Unknown</div>
+      <div class="access-denied">ACCESS DENIED</div>
+    </div>
+    <div id="denied-particles"></div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="screen-admin" class="screen hidden">
+    <div class="admin-panel">
+      <div class="admin-header">
+        <h1>Admin Portal</h1>
+        <button id="admin-back">← Exit</button>
+      </div>
+      <div id="admin-users"></div>
+      <div id="admin-enroll-modal" class="modal hidden">
+        <div class="modal-inner">
+          <h2 id="enroll-title">Enrolling...</h2>
+          <div id="enroll-camera-ring">
+            <video id="enroll-video" autoplay muted playsinline></video>
+            <canvas id="enroll-canvas"></canvas>
+          </div>
+          <div id="enroll-status">Position face in frame</div>
+          <div class="modal-actions">
+            <button id="enroll-capture">Capture</button>
+            <button id="enroll-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOVE PATH -->
+  <div id="screen-love" class="screen hidden">
+    <div id="love-petals"></div>
+    <div id="love-glow"></div>
+    <div id="love-s0" class="love-screen active-screen"></div>
+    <div id="love-s1" class="love-screen hidden"></div>
+    <div id="love-s2" class="love-screen hidden"></div>
+    <div id="love-s3" class="love-screen hidden"></div>
+    <div id="love-s4" class="love-screen hidden"></div>
+    <div id="love-s5" class="love-screen hidden"></div>
+    <div class="path-nav">
+      <div class="nav-dots" id="love-dots"></div>
+      <div class="nav-hint">tap to continue</div>
+    </div>
+    <button class="mute-btn" id="love-mute" title="Toggle music">♪</button>
+  </div>
+
+  <!-- BESTIE PATH -->
+  <div id="screen-bestie" class="screen hidden">
+    <div id="bestie-stars"></div>
+    <div id="bestie-confetti"></div>
+    <div id="bestie-s0" class="bestie-screen active-screen"></div>
+    <div id="bestie-s1" class="bestie-screen hidden"></div>
+    <div id="bestie-s2" class="bestie-screen hidden"></div>
+    <div id="bestie-s3" class="bestie-screen hidden"></div>
+    <div id="bestie-s4" class="bestie-screen hidden"></div>
+    <div id="bestie-s5" class="bestie-screen hidden"></div>
+    <div class="path-nav">
+      <div class="nav-dots" id="bestie-dots"></div>
+      <div class="nav-hint">tap to continue</div>
+    </div>
+    <button class="mute-btn" id="bestie-mute" title="Toggle music">♪</button>
+  </div>
+
+  <!-- SELF PATH -->
+  <div id="screen-self" class="screen hidden">
+    <div id="self-grid-bg"></div>
+    <div id="self-s0" class="self-screen active-screen"></div>
+    <div id="self-s1" class="self-screen hidden"></div>
+    <div id="self-s2" class="self-screen hidden"></div>
+    <div id="self-s3" class="self-screen hidden"></div>
+    <div id="self-s4" class="self-screen hidden"></div>
+    <div id="self-s5" class="self-screen hidden"></div>
+    <div class="path-nav">
+      <div class="nav-dots" id="self-dots"></div>
+      <div class="nav-hint">tap to continue</div>
+    </div>
+    <button class="mute-btn" id="self-mute" title="Toggle music">♪</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
