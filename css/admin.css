@@ -1,1 +1,90 @@
-/* admin.css — placeholder, styles added in Task 3 */
+#screen-admin {
+  background: #05080f;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 24px;
+}
+.admin-panel {
+  width: 100%; max-width: 600px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.admin-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.admin-header h1 { font-size: 1.2rem; font-weight: 300; letter-spacing: 0.2em; }
+#admin-back {
+  background: none; border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.6); border-radius: 8px;
+  padding: 8px 16px; cursor: pointer; font-size: 0.8rem;
+  transition: all 0.2s;
+}
+#admin-back:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+.admin-user-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.admin-user-info h3 { font-size: 1rem; font-weight: 500; margin-bottom: 4px; }
+.admin-user-info .path-tag {
+  font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 20px; display: inline-block;
+}
+.path-tag.love    { background: rgba(255,32,96,0.15);  color: var(--love-soft); }
+.path-tag.bestie  { background: rgba(96,165,250,0.15); color: var(--bestie-soft); }
+.path-tag.self    { background: rgba(0,200,255,0.15);  color: var(--self-soft); }
+.admin-enrolled   { font-size: 0.7rem; margin-top: 4px; }
+.admin-enrolled.yes { color: #7dffb0; }
+.admin-enrolled.no  { color: rgba(255,255,255,0.3); }
+
+.admin-user-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.admin-btn {
+  padding: 8px 14px; border-radius: 8px; font-size: 0.75rem;
+  cursor: pointer; transition: all 0.2s; border: 1px solid;
+}
+.admin-btn-enroll {
+  background: rgba(0,200,255,0.1); border-color: rgba(0,200,255,0.3);
+  color: var(--self-primary);
+}
+.admin-btn-enroll:hover { background: rgba(0,200,255,0.2); }
+.admin-btn-visit {
+  background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+}
+.admin-btn-visit:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+/* Modal */
+.modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; backdrop-filter: blur(8px);
+}
+.modal-inner {
+  background: #0d1525; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px; padding: 32px; max-width: 360px; width: 90%;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+.modal-inner h2 { font-weight: 300; letter-spacing: 0.1em; }
+#enroll-camera-ring {
+  width: 180px; height: 180px; border-radius: 50%;
+  overflow: hidden; border: 2px solid rgba(0,200,255,0.3);
+  position: relative;
+}
+#enroll-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+#enroll-canvas { position: absolute; inset: 0; width: 100%; height: 100%; transform: scaleX(-1); }
+#enroll-status { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-align: center; }
+.modal-actions { display: flex; gap: 12px; }
+#enroll-capture {
+  background: rgba(0,200,255,0.15); border: 1px solid rgba(0,200,255,0.4);
+  color: #00c8ff; border-radius: 10px; padding: 10px 24px; cursor: pointer;
+  font-size: 0.85rem; transition: all 0.2s;
+}
+#enroll-capture:hover { background: rgba(0,200,255,0.25); }
+#enroll-cancel {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6); border-radius: 10px; padding: 10px 24px;
+  cursor: pointer; font-size: 0.85rem;
+}
