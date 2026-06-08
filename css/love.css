@@ -1,1 +1,122 @@
-/* love.css — placeholder, styles added in Task 4 */
+/* ── Love Path Container ── */
+#screen-love {
+  background: radial-gradient(ellipse at center, #3d0028 0%, #1a0010 60%, #050005 100%);
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Petals ── */
+#love-petals { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.petal {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: petal-fall linear infinite;
+  user-select: none;
+  pointer-events: none;
+}
+@keyframes petal-fall {
+  0%   { transform: translateY(-5vh) rotate(0deg) translateX(0); opacity: 0; }
+  5%   { opacity: 0.8; }
+  95%  { opacity: 0.5; }
+  100% { transform: translateY(105vh) rotate(720deg) translateX(40px); opacity: 0; }
+}
+
+#love-glow {
+  position: fixed; width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,0,80,0.12), transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  pointer-events: none; z-index: 0;
+  animation: glow-breathe 4s ease-in-out infinite;
+}
+@keyframes glow-breathe {
+  0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+  50%     { transform: translate(-50%,-50%) scale(1.2); opacity: 1; }
+}
+
+/* ── Screens ── */
+.love-screen {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 28px; text-align: center; z-index: 10;
+  opacity: 0; transition: opacity 0.8s ease;
+}
+.love-screen.active-screen { opacity: 1; }
+
+/* Screen 0 — Unlock */
+.love-unlock-heart {
+  font-size: 5rem;
+  animation: heartbeat 1.5s ease-in-out infinite, heart-enter 1s var(--ease-out-expo);
+  filter: drop-shadow(0 0 30px rgba(255,0,80,0.8));
+  margin-bottom: 24px;
+}
+@keyframes heartbeat { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+@keyframes heart-enter { from{transform:scale(0) rotate(-30deg);} to{transform:scale(1) rotate(0);} }
+.love-unlock-title {
+  font-size: clamp(1.4rem, 5vw, 2rem); font-weight: 300;
+  color: #ffb3cc; letter-spacing: 0.1em; margin-bottom: 8px;
+}
+.love-unlock-sub { font-size: 0.85rem; color: rgba(255,150,180,0.7); letter-spacing: 0.05em; }
+
+/* Screen 1 — Love Letter */
+.love-letter-paper {
+  background: rgba(255,200,220,0.05);
+  border: 1px solid rgba(255,100,150,0.2);
+  border-radius: 16px; padding: 32px; max-width: 340px;
+  font-family: 'Georgia', serif; line-height: 1.9;
+  animation: letter-unfold 0.8s var(--ease-out-expo);
+}
+@keyframes letter-unfold {
+  from { transform: scaleY(0.3) translateY(-20px); opacity: 0; }
+  to   { transform: scaleY(1) translateY(0); opacity: 1; }
+}
+.love-letter-paper p { color: rgba(255,200,220,0.9); font-size: 0.9rem; }
+.love-letter-paper .hindi { color: var(--love-soft); font-style: italic; margin-top: 12px; display: block; }
+.love-letter-sign { margin-top: 16px; color: #ff6699; font-style: italic; }
+
+/* Screen 2 — Distance */
+.love-distance-num {
+  font-size: clamp(2.5rem, 10vw, 4rem); font-weight: 100;
+  color: #ffb3cc; letter-spacing: -0.02em;
+  animation: count-up 2s var(--ease-out-expo);
+}
+@keyframes count-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.love-distance-label { font-size: 0.7rem; letter-spacing: 0.3em; color: rgba(255,150,180,0.6); text-transform: uppercase; margin-top: 4px; }
+.love-globe-wrap { margin: 20px 0; }
+.love-globe-sub { font-size: 0.75rem; color: rgba(255,150,180,0.5); margin-top: 8px; }
+
+/* Screen 3 — Reason Cards */
+.love-card {
+  background: rgba(255,0,80,0.08); border: 1px solid rgba(255,100,150,0.25);
+  border-radius: 20px; padding: 32px 28px; max-width: 320px;
+  animation: card-flip-in 0.5s var(--ease-out-expo);
+}
+@keyframes card-flip-in {
+  from { transform: rotateY(-90deg) scale(0.8); opacity: 0; }
+  to   { transform: rotateY(0) scale(1); opacity: 1; }
+}
+.love-card-num { font-size: 0.65rem; letter-spacing: 0.3em; color: rgba(255,100,150,0.5); margin-bottom: 16px; text-transform: uppercase; }
+.love-card-text { font-size: 1.1rem; color: #ffccdd; line-height: 1.6; }
+.love-card-hindi { font-size: 0.85rem; color: var(--love-soft); margin-top: 12px; font-style: italic; }
+
+/* Screen 4 — Memory Wall */
+.love-polaroids { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; max-width: 360px; }
+.polaroid {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px; padding: 10px 10px 24px;
+  transform: rotate(var(--rot));
+  animation: polaroid-in 0.4s var(--ease-out-expo) both;
+  width: 100px;
+}
+@keyframes polaroid-in { from{transform:rotate(var(--rot)) scale(0.5) translateY(20px);opacity:0;} }
+.polaroid-img { width: 80px; height: 80px; background: rgba(255,100,150,0.1); border-radius: 2px; display:flex;align-items:center;justify-content:center; font-size:1.5rem; }
+.polaroid-caption { font-size: 0.55rem; text-align: center; color: rgba(255,200,220,0.5); margin-top: 6px; }
+
+/* Screen 5 — Closing */
+.love-closing-sig {
+  font-family: 'Georgia', cursive; font-size: clamp(1.5rem, 6vw, 2.2rem);
+  color: #ffb3cc; animation: sig-write 1.5s var(--ease-out-expo);
+  margin-bottom: 20px;
+}
+@keyframes sig-write { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.love-hearts-rain { font-size: 1.5rem; animation: hearts-dance 3s ease-in-out infinite; }
+@keyframes hearts-dance { 0%,100%{letter-spacing:0.2em;} 50%{letter-spacing:0.5em;} }
