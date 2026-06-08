@@ -1,10 +1,11 @@
-// Entry point — portal.js will be wired in Task 5
-// import { initPortal } from './portal.js';  <-- wired in Task 5
+import { loadModels } from './face-engine.js';
 
-/**
- * Placeholder until portal.js is implemented in Task 5.
- * @returns {void}
- */
-export function revealPath() {
-  // no-op stub
+// revealPath wired in Task 11
+export function revealPath(path) {
+  console.log('Reveal path:', path);
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadModels();
+  // initPortal() wired in Task 5
+});
