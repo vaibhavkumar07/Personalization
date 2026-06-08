@@ -6,6 +6,15 @@ export function revealPath(path) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadModels();
-  // initPortal() wired in Task 5
+  try {
+    await loadModels();
+    // initPortal() wired in Task 5
+  } catch (err) {
+    console.error('Failed to load face models:', err);
+    const status = document.getElementById('portal-status');
+    if (status) {
+      status.textContent = 'Failed to load models. Check connection.';
+      status.className = 'error';
+    }
+  }
 });

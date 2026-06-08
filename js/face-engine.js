@@ -41,14 +41,13 @@ export function findMatch(descriptor, users) {
 
 export function drawDetection(canvas, video, detection) {
   const dims = faceapi.matchDimensions(canvas, video, true);
-  canvas.width = dims.width;
-  canvas.height = dims.height;
+  // matchDimensions already sets canvas.width/height when third arg is true
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (!detection) return;
   const resized = faceapi.resizeResults(detection, dims);
   const box = resized.detection.box;
-  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)'; // semi-transparent for glass aesthetic
   ctx.lineWidth = 2;
   ctx.strokeRect(box.x, box.y, box.width, box.height);
 }
