@@ -1,6 +1,6 @@
 // Change ADMIN_PASSWORD before deploying
 export const ADMIN_PASSWORD = 'vaibhav2024';
-export const FACE_MATCH_THRESHOLD = 0.55;
+export const FACE_MATCH_THRESHOLD = 0.6;
 export const FACE_STABILITY_MS = 1500; // hold before prompting name
 
 // Coordinates for distance globe (Texas ↔ Noida)

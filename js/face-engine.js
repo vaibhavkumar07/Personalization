@@ -40,6 +40,7 @@ export function findMatch(descriptor, users) {
     );
     if (dist < bestDist) { bestDist = dist; best = user; }
   }
+  console.debug('[face] best dist:', bestDist.toFixed(3), '→', best?.name ?? 'none', '| threshold:', FACE_MATCH_THRESHOLD);
   return bestDist < FACE_MATCH_THRESHOLD ? best : null;
 }
 
