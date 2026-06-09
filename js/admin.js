@@ -73,24 +73,32 @@ function openEnrollModal(user) {
   document.getElementById('enroll-status').textContent = 'Position face in frame, then capture';
   modal.classList.remove('hidden');
 
-  const video = document.getElementById('enroll-video');
-  let stream = null;
+  const enrollVideo = document.getElementById('enroll-video');
+  const portalVideo = document.getElementById('portal-video');
+  let ownStream = null;
   let cancelled = false;
 
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-    .then(s => {
-      if (cancelled) { s.getTracks().forEach(t => t.stop()); return; }
-      stream = s;
-      video.srcObject = s;
-    })
-    .catch(() => {
-      document.getElementById('enroll-status').textContent = 'Camera access denied. Cannot enroll.';
-    });
+  // Reuse portal stream to avoid dual-camera conflict on mobile
+  if (portalVideo?.srcObject) {
+    enrollVideo.srcObject = portalVideo.srcObject;
+    enrollVideo.play().catch(() => {});
+  } else {
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+      .then(s => {
+        if (cancelled) { s.getTracks().forEach(t => t.stop()); return; }
+        ownStream = s;
+        enrollVideo.srcObject = s;
+        enrollVideo.play().catch(() => {});
+      })
+      .catch(() => {
+        document.getElementById('enroll-status').textContent = 'Camera access denied. Cannot enroll.';
+      });
+  }
 
   function cleanup() {
     cancelled = true;
-    stream?.getTracks().forEach(t => t.stop());
-    video.srcObject = null;
+    if (ownStream) { ownStream.getTracks().forEach(t => t.stop()); ownStream = null; }
+    enrollVideo.srcObject = null;
     modal.classList.add('hidden');
     renderUserList();
   }
@@ -98,7 +106,6 @@ function openEnrollModal(user) {
   const captureBtn = document.getElementById('enroll-capture');
   const cancelBtn  = document.getElementById('enroll-cancel');
 
-  // Remove any existing listeners by cloning
   const newCaptureBtn = captureBtn.cloneNode(true);
   const newCancelBtn  = cancelBtn.cloneNode(true);
   captureBtn.replaceWith(newCaptureBtn);
@@ -107,11 +114,11 @@ function openEnrollModal(user) {
   function handleCapture() {
     newCaptureBtn.disabled = true;
     document.getElementById('enroll-status').textContent = 'Computing descriptor...';
-    computeDescriptor(video)
+    computeDescriptor(enrollVideo)
       .then(descriptor => {
         if (!descriptor) {
           document.getElementById('enroll-status').textContent = 'No face detected. Try again.';
-          newCaptureBtn.disabled = false; // re-enable so user can try again
+          newCaptureBtn.disabled = false;
           return;
         }
         user.descriptor = descriptor;
@@ -119,7 +126,7 @@ function openEnrollModal(user) {
         cleanup();
       })
       .catch(err => {
-        document.getElementById('enroll-status').textContent = 'Error: ' + err.message;
+        document.getElementById('enroll-status').textContent = 'Error: ' + (err.message || 'unknown');
         newCaptureBtn.disabled = false;
       });
   }
