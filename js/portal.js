@@ -98,6 +98,12 @@ function bindNameInput() {
   input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
 }
 
+function _nameMatches(input, stored) {
+  const a = input.toLowerCase().trim();
+  const b = stored.toLowerCase().trim();
+  return a === b || a === b.split(' ')[0];
+}
+
 async function attemptMatch(name) {
   if (!name || !_capturedDescriptor) return;
   setState(S.MATCHING);
@@ -109,7 +115,7 @@ async function attemptMatch(name) {
   }
 
   const faceMatch = findMatch(_capturedDescriptor, _users);
-  const nameMatch = faceMatch && name.toLowerCase() === faceMatch.name.toLowerCase();
+  const nameMatch = faceMatch && _nameMatches(name, faceMatch.name);
 
   if (faceMatch && nameMatch) {
     const { revealPath } = await import('./main.js');

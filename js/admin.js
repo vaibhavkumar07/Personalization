@@ -78,10 +78,32 @@ function openEnrollModal(user) {
   let ownStream = null;
   let cancelled = false;
 
+  const captureBtn = document.getElementById('enroll-capture');
+  const cancelBtn  = document.getElementById('enroll-cancel');
+
+  const newCaptureBtn = captureBtn.cloneNode(true);
+  const newCancelBtn  = cancelBtn.cloneNode(true);
+  captureBtn.replaceWith(newCaptureBtn);
+  cancelBtn.replaceWith(newCancelBtn);
+
+  // Disable until video is playing
+  newCaptureBtn.disabled = true;
+  document.getElementById('enroll-status').textContent = 'Waiting for camera...';
+
+  function onVideoReady() {
+    if (cancelled) return;
+    newCaptureBtn.disabled = false;
+    document.getElementById('enroll-status').textContent = 'Position face in frame, then capture';
+  }
+
+  enrollVideo.addEventListener('playing', onVideoReady, { once: true });
+
   // Reuse portal stream to avoid dual-camera conflict on mobile
   if (portalVideo?.srcObject) {
     enrollVideo.srcObject = portalVideo.srcObject;
     enrollVideo.play().catch(() => {});
+    // If already playing (e.g. same stream reused), fire ready immediately
+    if (!enrollVideo.paused && enrollVideo.readyState >= 3) onVideoReady();
   } else {
     navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
       .then(s => {
@@ -97,19 +119,12 @@ function openEnrollModal(user) {
 
   function cleanup() {
     cancelled = true;
+    enrollVideo.removeEventListener('playing', onVideoReady);
     if (ownStream) { ownStream.getTracks().forEach(t => t.stop()); ownStream = null; }
     enrollVideo.srcObject = null;
     modal.classList.add('hidden');
     renderUserList();
   }
-
-  const captureBtn = document.getElementById('enroll-capture');
-  const cancelBtn  = document.getElementById('enroll-cancel');
-
-  const newCaptureBtn = captureBtn.cloneNode(true);
-  const newCancelBtn  = cancelBtn.cloneNode(true);
-  captureBtn.replaceWith(newCaptureBtn);
-  cancelBtn.replaceWith(newCancelBtn);
 
   function handleCapture() {
     newCaptureBtn.disabled = true;
