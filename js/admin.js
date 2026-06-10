@@ -33,7 +33,7 @@ function renderUserList() {
 
     const credEl = document.createElement('div');
     credEl.className = 'admin-enrolled yes';
-    credEl.textContent = `user: ${user.username}  ·  pass: ${user.password}`;
+    credEl.textContent = `username: ${user.username}`;
 
     info.appendChild(nameEl);
     info.appendChild(pathTag);

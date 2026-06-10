@@ -1,4 +1,4 @@
-import { USERS, ADMIN_PASSWORD } from './config.js';
+import { USERS, ADMIN_HASH, hashPassword } from './config.js';
 import { setState, S } from './state.js';
 
 export function initPortal() {
@@ -10,12 +10,15 @@ export function initPortal() {
 function checkSetupMode() {
   if (!window.location.search.includes('setup')) return;
   const pw = prompt('Admin password:');
-  if (pw === ADMIN_PASSWORD) {
-    import('./admin.js').then(m => m.initAdmin(USERS));
-  } else if (pw !== null) {
-    setStatus('Access denied', 'error');
-    history.replaceState(null, '', window.location.pathname);
-  }
+  if (pw === null) return;
+  hashPassword(pw).then(h => {
+    if (h === ADMIN_HASH) {
+      import('./admin.js').then(m => m.initAdmin(USERS));
+    } else {
+      setStatus('Access denied', 'error');
+      history.replaceState(null, '', window.location.pathname);
+    }
+  });
 }
 
 function bindLoginForm() {
@@ -41,16 +44,17 @@ async function attemptLogin(username, password) {
 
   setState(S.MATCHING);
 
-  // Admin via username "admin" or the admin password as username
-  if (password === ADMIN_PASSWORD && (username.toLowerCase() === 'admin' || username.toLowerCase() === 'vaibhav')) {
+  const h = await hashPassword(password);
+  const uname = username.toLowerCase();
+
+  // Admin: username "admin" or "vaibhav" + admin password hash
+  if (h === ADMIN_HASH && (uname === 'admin' || uname === 'vaibhav')) {
     const { initAdmin } = await import('./admin.js');
     initAdmin(USERS);
     return;
   }
 
-  const user = USERS.find(u =>
-    u.username.toLowerCase() === username.toLowerCase() && u.password === password
-  );
+  const user = USERS.find(u => u.username.toLowerCase() === uname && u.hash === h);
 
   if (user) {
     const { revealPath } = await import('./main.js');
