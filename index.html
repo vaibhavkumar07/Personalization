@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#050810">
-  <title>Face Portal</title>
+  <title>Portal</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/portal.css">
   <link rel="stylesheet" href="css/admin.css">
@@ -18,21 +18,15 @@
   <div id="screen-portal" class="screen active">
     <div id="portal-particles" aria-hidden="true"></div>
     <div class="glass-card">
-      <div id="camera-ring">
-        <video id="portal-video" autoplay muted playsinline></video>
-        <canvas id="portal-canvas"></canvas>
-        <div id="scan-line"></div>
-        <div id="corner-tl" class="corner"></div>
-        <div id="corner-tr" class="corner"></div>
-        <div id="corner-bl" class="corner"></div>
-        <div id="corner-br" class="corner"></div>
+      <div id="portal-logo">🔮</div>
+      <div id="portal-title">Who are you?</div>
+      <div id="portal-form">
+        <input id="username-input" type="text" placeholder="Username" autocomplete="off" autocorrect="off" spellcheck="false">
+        <input id="password-input" type="password" placeholder="Password" autocomplete="off">
+        <button id="login-btn">Enter →</button>
       </div>
-      <div id="portal-status">Initializing...</div>
-      <div id="name-wrap" class="hidden">
-        <input id="name-input" type="text" placeholder="Enter your name..." autocomplete="off" autocorrect="off" spellcheck="false">
-        <button id="name-btn" aria-label="Submit">→</button>
-      </div>
-      <div id="portal-hint">Look into the portal</div>
+      <div id="portal-status"></div>
+      <div id="portal-hint">enter your credentials</div>
     </div>
   </div>
 
@@ -53,20 +47,6 @@
         <button id="admin-back">← Exit</button>
       </div>
       <div id="admin-users"></div>
-      <div id="admin-enroll-modal" class="modal hidden">
-        <div class="modal-inner">
-          <h2 id="enroll-title">Enrolling...</h2>
-          <div id="enroll-camera-ring">
-            <video id="enroll-video" autoplay muted playsinline></video>
-            <canvas id="enroll-canvas"></canvas>
-          </div>
-          <div id="enroll-status">Position face in frame</div>
-          <div class="modal-actions">
-            <button id="enroll-capture">Capture</button>
-            <button id="enroll-cancel">Cancel</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -120,7 +100,6 @@
     <button class="mute-btn" id="self-mute" title="Toggle music">♪</button>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -1,131 +1,67 @@
-import { loadUsers, ADMIN_PASSWORD, FACE_STABILITY_MS } from './config.js';
-import { detectSingle, drawDetection, findMatch } from './face-engine.js';
-import { setState, getState, S } from './state.js';
-
-let _users = [];
-let _video = null;
-let _canvas = null;
-let _stableTimer = null;
-let _capturedDescriptor = null;
-let _detectionLoopId = null;
+import { USERS, ADMIN_PASSWORD } from './config.js';
+import { setState, S } from './state.js';
 
 export function initPortal() {
-  _users = loadUsers();
-  _video = document.getElementById('portal-video');
-  _canvas = document.getElementById('portal-canvas');
-
   spawnParticles();
   checkSetupMode();
-  startCamera();
-  bindNameInput();
+  bindLoginForm();
 }
 
 function checkSetupMode() {
   if (!window.location.search.includes('setup')) return;
   const pw = prompt('Admin password:');
   if (pw === ADMIN_PASSWORD) {
-    import('./admin.js').then(m => m.initAdmin(_users));
+    import('./admin.js').then(m => m.initAdmin(USERS));
   } else if (pw !== null) {
-    // Wrong password — show error on portal, continue normally
     setStatus('Access denied', 'error');
-    // Clean up the ?setup param so it doesn't re-prompt on refresh
     history.replaceState(null, '', window.location.pathname);
   }
 }
 
-async function startCamera() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-    _video.srcObject = stream;
-    _video.addEventListener('playing', () => {
-      setState(S.SCANNING);
-      setStatus('Scanning...');
-      runDetectionLoop();
-    }, { once: true });
-  } catch {
-    setStatus('Camera access needed', 'error');
-  }
+function bindLoginForm() {
+  const usernameInput = document.getElementById('username-input');
+  const passwordInput = document.getElementById('password-input');
+  const loginBtn      = document.getElementById('login-btn');
+
+  const submit = () => attemptLogin(
+    usernameInput.value.trim(),
+    passwordInput.value
+  );
+
+  loginBtn.addEventListener('click', submit);
+  passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  usernameInput.addEventListener('keydown', e => { if (e.key === 'Enter') passwordInput.focus(); });
 }
 
-function runDetectionLoop() {
-  let frameCount = 0;
-  const loop = async () => {
-    const state = getState();
-    if (state === S.NAME_INPUT || state === S.MATCHING || state === S.ADMIN) {
-      _detectionLoopId = requestAnimationFrame(loop);
-      return;
-    }
-    if (frameCount++ % 3 === 0) {
-      const det = await detectSingle(_video);
-      drawDetection(_canvas, _video, det);
-      if (det && state === S.SCANNING) {
-        onFaceDetected(det.descriptor);
-      } else if (!det && state === S.FACE_DETECTED) {
-        clearStableTimer();
-        setState(S.SCANNING);
-        setStatus('Scanning...');
-      }
-    }
-    _detectionLoopId = requestAnimationFrame(loop);
-  };
-  _detectionLoopId = requestAnimationFrame(loop);
-}
-
-function onFaceDetected(descriptor) {
-  if (_stableTimer) return;
-  setState(S.FACE_DETECTED);
-  setStatus('Face detected ✓', 'detected');
-  _capturedDescriptor = descriptor;
-  _stableTimer = setTimeout(() => {
-    setState(S.NAME_INPUT);
-    document.getElementById('scan-line').classList.add('paused');
-    document.getElementById('name-wrap').classList.remove('hidden');
-    document.getElementById('name-input').focus();
-    setStatus('Enter your name');
-  }, FACE_STABILITY_MS);
-}
-
-function clearStableTimer() {
-  clearTimeout(_stableTimer);
-  _stableTimer = null;
-}
-
-function bindNameInput() {
-  const input = document.getElementById('name-input');
-  const btn   = document.getElementById('name-btn');
-  const submit = () => attemptMatch(input.value.trim());
-  btn.addEventListener('click', submit);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
-}
-
-function _nameMatches(input, stored) {
-  const a = input.toLowerCase().trim();
-  const b = stored.toLowerCase().trim();
-  return a === b || a === b.split(' ')[0];
-}
-
-async function attemptMatch(name) {
-  if (!name || !_capturedDescriptor) return;
-  setState(S.MATCHING);
-
-  if (name === ADMIN_PASSWORD) {
-    const { initAdmin } = await import('./admin.js');
-    initAdmin(_users);
+async function attemptLogin(username, password) {
+  if (!username || !password) {
+    setStatus('Enter username and password', 'error');
     return;
   }
 
-  const faceMatch = findMatch(_capturedDescriptor, _users);
-  const nameMatch = faceMatch && _nameMatches(name, faceMatch.name);
+  setState(S.MATCHING);
 
-  if (faceMatch && nameMatch) {
+  // Admin via username "admin" or the admin password as username
+  if (password === ADMIN_PASSWORD && (username.toLowerCase() === 'admin' || username.toLowerCase() === 'vaibhav')) {
+    const { initAdmin } = await import('./admin.js');
+    initAdmin(USERS);
+    return;
+  }
+
+  const user = USERS.find(u =>
+    u.username.toLowerCase() === username.toLowerCase() && u.password === password
+  );
+
+  if (user) {
     const { revealPath } = await import('./main.js');
-    revealPath(faceMatch.path);
+    revealPath(user.path);
   } else {
     showNotFound();
   }
 }
 
 function showNotFound() {
+  setState(S.NOT_FOUND);
   const notFound = document.getElementById('screen-notfound');
   document.getElementById('screen-portal').classList.add('screen-shake');
   notFound.classList.remove('hidden');
@@ -135,6 +71,20 @@ function showNotFound() {
     document.getElementById('screen-portal').classList.remove('screen-shake');
     resetPortal();
   }, 3200);
+}
+
+function resetPortal() {
+  setState(S.INIT);
+  document.getElementById('username-input').value = '';
+  document.getElementById('password-input').value = '';
+  setStatus('');
+  document.getElementById('username-input').focus();
+}
+
+function setStatus(text, type = '') {
+  const el = document.getElementById('portal-status');
+  el.textContent = text;
+  el.className = type;
 }
 
 function spawnDeniedParticles() {
@@ -155,32 +105,6 @@ function spawnDeniedParticles() {
     `;
     container.appendChild(p);
   }
-}
-
-export function stopDetectionLoop() {
-  if (_detectionLoopId) {
-    cancelAnimationFrame(_detectionLoopId);
-    _detectionLoopId = null;
-  }
-}
-
-function resetPortal() {
-  stopDetectionLoop();
-  _capturedDescriptor = null;
-  clearStableTimer();
-  const nameWrap = document.getElementById('name-wrap');
-  const nameInput = document.getElementById('name-input');
-  nameWrap.classList.add('hidden');
-  nameInput.value = '';
-  document.getElementById('scan-line').classList.remove('paused');
-  setState(S.SCANNING);
-  setStatus('Scanning...');
-}
-
-function setStatus(text, type = '') {
-  const el = document.getElementById('portal-status');
-  el.textContent = text;
-  el.className = type;
 }
 
 function spawnParticles() {

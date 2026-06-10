@@ -1,4 +1,3 @@
-import { loadModels } from './face-engine.js';
 import { initPortal } from './portal.js';
 import { initLove } from './paths/love.js';
 import { initBestie } from './paths/bestie.js';
@@ -26,14 +25,7 @@ export function revealPath(path) {
   bindMuteBtn(config.muteBtn);
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    await loadModels();
-  } catch (err) {
-    console.error('Failed to load face models:', err);
-    const status = document.getElementById('portal-status');
-    if (status) { status.textContent = 'Failed to load models. Check connection.'; status.className = 'error'; }
-  }
+document.addEventListener('DOMContentLoaded', () => {
   initPortal();
   initNav();
 });
