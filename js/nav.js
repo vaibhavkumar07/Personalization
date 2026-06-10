@@ -1,12 +1,10 @@
 import { advanceLove } from './paths/love.js';
-import { advanceBestie } from './paths/bestie.js';
 import { advanceSelf } from './paths/self.js';
 import { getState, S } from './state.js';
 
 const HANDLERS = {
-  [S.PATH_LOVE]:   advanceLove,
-  [S.PATH_BESTIE]: advanceBestie,
-  [S.PATH_SELF]:   advanceSelf,
+  [S.PATH_LOVE]: advanceLove,
+  [S.PATH_SELF]: advanceSelf,
 };
 
 export function initNav() {

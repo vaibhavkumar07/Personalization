@@ -17,9 +17,8 @@ export function calcDistanceKm(a, b) {
 export const ADMIN_HASH = '55c1e84e1b5adf94dd549c795214200754e1c3eefdbbc4802390f25f8cea0c84';
 
 export const USERS = [
-  { id: 'pragya',  name: 'Pragya Yadav',      path: 'love',   username: 'pragya',  hash: '04450f742b9beb0c97e857c449c8a6cc5206052b6ac2db82b7c065864d7fd844' },
-  { id: 'alka',    name: 'Alka Yadav',         path: 'bestie', username: 'panda',   hash: '35223c5326af0de372cf3662d4b5200f2e3132a0aee82902cdf413ed7920a25b' },
-  { id: 'vaibhav', name: 'Vaibhavkumar Yadav', path: 'self',   username: 'vaibhav', hash: 'be9a25c420b95fcf15f2d7ee19dcc54241af600453fbdf573a4e2b38171abd12' },
+  { id: 'pragya',  name: 'Pragya Yadav',      path: 'love', username: 'pragya',  hash: '04450f742b9beb0c97e857c449c8a6cc5206052b6ac2db82b7c065864d7fd844' },
+  { id: 'vaibhav', name: 'Vaibhavkumar Yadav', path: 'self', username: 'vaibhav', hash: 'be9a25c420b95fcf15f2d7ee19dcc54241af600453fbdf573a4e2b38171abd12' },
 ];
 
 export async function hashPassword(password) {
