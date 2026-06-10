@@ -1,3 +1,9 @@
 .DS_Store
 .superpowers/
 node_modules/
+docs/
+AGENTS.md
+models/
+css/bestie.css
+js/face-engine.js
+js/paths/bestie.js
