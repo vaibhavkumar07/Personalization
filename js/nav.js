@@ -9,12 +9,15 @@ const HANDLERS = {
 
 export function initNav() {
   document.addEventListener('click', handleAdvance);
-  document.addEventListener('touchend', e => { e.preventDefault(); handleAdvance(e); }, { passive: false });
+  document.addEventListener('touchend', handleAdvance, { passive: false });
 }
 
 function handleAdvance(e) {
   const tag = e.target.tagName.toLowerCase();
   if (['button','input','a'].includes(tag)) return;
   const handler = HANDLERS[getState()];
-  if (handler) handler();
+  if (handler) {
+    e.preventDefault();
+    handler();
+  }
 }
