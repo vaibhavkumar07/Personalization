@@ -84,10 +84,11 @@
   border-radius: 12px;
   padding: 12px 16px;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-family: var(--font-main);
   outline: none;
   transition: border-color 0.2s, background 0.2s;
+  touch-action: manipulation;
 }
 #username-input:focus,
 #password-input:focus {
